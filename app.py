@@ -125,12 +125,10 @@ def create_pdf_report(dataframe, title_text="StructuraSafe AI Report"):
     )
     text_style = styles['Normal']
     
-    # Title & Timestamp
     story.append(Paragraph(title_text, title_style))
     story.append(Paragraph(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", text_style))
     story.append(Spacer(1, 15))
     
-    # Convert Dataframe to Table format
     data = [dataframe.columns.tolist()] + dataframe.values.tolist()
     t = Table(data, hAlign='LEFT')
     t.setStyle(TableStyle([
@@ -248,7 +246,6 @@ elif module == "🌉 Bridge Health Monitoring":
         
         st.markdown("---")
         
-        # Real-time data plot selections
         time = np.arange(100)
         vibration_data = np.sin(time / 8) + np.random.normal(0, 0.1, 100)
         
@@ -319,7 +316,6 @@ elif module == "📈 Beam Deflection Visualizer":
         st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("---")
-    # Download Engine
     results_df = pd.DataFrame({
         "Parameter": ["Load (kN)", "Length (m)", "Max Deflection (m)", "Bending Stress (Pa)", "Safety Factor"],
         "Value": [load, beam_length, delta, stress, safety_factor]
@@ -346,7 +342,6 @@ elif module == "🔍 Crack Detection":
         with col1:
             st.image(image, caption="Original Image Instance", use_container_width=True)
 
-        # Computer Vision Structural Extraction
         gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
         blur = cv2.GaussianBlur(gray, (5, 5), 0)
         edges = cv2.Canny(blur, 50, 150)
@@ -394,7 +389,6 @@ elif module == "🏢 Earthquake Simulator":
     density = MATERIALS[material]["Density"]
     E = MATERIALS[material]["Young_Modulus"]
 
-    # Kinetic System Calculations
     mass = density * building_height
     acceleration = magnitude * 0.35
     earthquake_force = mass * acceleration
@@ -414,7 +408,6 @@ elif module == "🏢 Earthquake Simulator":
         else:
             st.error(f"Seismic Rating: UNSTABLE FAILURE RISK ({safety_rating:.1f}%)")
 
-        # Time history dynamic wave response
         t = np.linspace(0, 20, 500)
         response = np.sin(magnitude * t) * np.exp(-damping_ratio * t)
         fig_eq = go.Figure()
@@ -437,11 +430,9 @@ elif module == "🚛 Load Capacity Predictor":
         traffic_load = st.slider("Traffic Volume Load (tons/day)", 1, 1000, 250)
         environment = st.selectbox("Environmental Exposure Index", ["Excellent", "Good", "Moderate", "Aggressive"])
 
-    # Weight Constants
     env_factor = {"Excellent": 1.0, "Good": 0.85, "Moderate": 0.70, "Aggressive": 0.50}
     material_factor = {"Concrete": 0.85, "Reinforced Concrete": 0.90, "Structural Steel": 1.00, "Aluminum Alloy": 0.80, "Timber": 0.65}
 
-    # Synthesize & Fit Regression Model Instance on App Run
     rows = 200
     np.random.seed(42)
     age_data = np.random.randint(1, 100, rows)
@@ -455,7 +446,6 @@ elif module == "🚛 Load Capacity Predictor":
     model = RandomForestRegressor(n_estimators=50, random_state=42)
     model.fit(X, y)
 
-    # DataFrame configuration matches specific model columns to ensure future safe scaling
     input_features = pd.DataFrame([[bridge_age, span_length, traffic_load]], columns=["Age", "Span", "Traffic"])
     prediction = model.predict(input_features)[0]
     prediction *= env_factor[environment] * material_factor[material]
@@ -470,7 +460,6 @@ elif module == "🚛 Load Capacity Predictor":
         k2.metric("Remaining Operational Life", f"{remaining_life:.1f} Years")
         k3.metric("Structural Health Score", f"{health_score:.1f}%")
 
-        # Feature Importance Metric Plotting
         importance_df = pd.DataFrame({"Structural Variable": ["Structure Age", "Span Width", "Traffic Density"], "Weight Importance": model.feature_importances_})
         fig_imp = px.bar(importance_df, x="Structural Variable", y="Weight Importance", title="ML Engine Structural Feature Weight Profile Matrix", height=280)
         st.plotly_chart(fig_imp, use_container_width=True)
